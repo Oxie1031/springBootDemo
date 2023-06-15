@@ -2,14 +2,14 @@
 package com.example.demo;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HelloWorldController {
 
-    @GetMapping("/{country}")
-    public String helloWorld(@PathVariable String country) {
+    @GetMapping("/greeting")
+    public String helloWorld(@RequestParam String country) {
         switch(country.toLowerCase()) {
             case "usa":
                 return "Hello, USA!";
