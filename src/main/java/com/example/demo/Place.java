@@ -1,7 +1,12 @@
 package com.example.demo;
 
+import javax.validation.constraints.NotBlank;
+
 public class Place {
+    @NotBlank
     private String country;
+
+    @NotBlank
     private String landmark;
 
     public Place(String country, String landmark) {

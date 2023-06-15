@@ -23,17 +23,25 @@ public class PlaceController {
     }
 
     @PostMapping("/places")
-    public Response addPlace(@RequestBody Place place) {
+    public Response addPlace(@Valid @RequestBody Place place, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new Response("Invalid data provided.", null);
+        }
         Long id = counter.incrementAndGet();
         places.put(id, place);
         return new Response("Successfully added place.", id);
     }
 
+
     @PatchMapping("/places/{id}")
-    public Response updatePlace(@PathVariable Long id, @RequestBody Place newPlace) {
+    public Response updatePlace(@PathVariable Long id, @Valid @RequestBody Place newPlace, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new Response("Invalid data provided.", null);
+        }
         places.put(id, newPlace);
         return new Response("Successfully updated place.", newPlace);
     }
+
 
     @DeleteMapping("/places/{id}")
     public Response deletePlace(@PathVariable Long id) {
