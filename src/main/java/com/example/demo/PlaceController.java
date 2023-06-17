@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.springframework.validation.BindingResult;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.validation.ObjectError;
 
 
 
@@ -37,7 +40,10 @@ public class PlaceController {
     @PostMapping("/places")
     public Response addPlace(@Valid @RequestBody Place place, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new Response("Invalid data provided.", null);
+            List<String> errorMessages = bindingResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return new Response("Invalid data provided. Errors: " + errorMessages, null);
         }
         Long id = counter.incrementAndGet();
         places.put(id, place);
@@ -45,14 +51,22 @@ public class PlaceController {
     }
 
 
+
     @PatchMapping("/places/{id}")
     public Response updatePlace(@PathVariable Long id, @Valid @RequestBody Place newPlace, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new Response("Invalid data provided.", null);
+            List<String> errorMessages = bindingResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return new Response("Invalid data provided. Errors: " + errorMessages, null);
+        }
+        if (!places.containsKey(id)) {
+            throw new ResourceNotFoundException("Place with id " + id + " not found.");
         }
         places.put(id, newPlace);
         return new Response("Successfully updated place.", newPlace);
     }
+
 
 
     @DeleteMapping("/places/{id}")
@@ -61,4 +75,3 @@ public class PlaceController {
         return new Response("Successfully deleted place.", null);
     }
 }
-

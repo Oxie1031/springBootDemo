@@ -1,7 +1,6 @@
 package com.example.demo;
 
-import jakarta.validation.constraints.NotBlank;
-
+import javax.validation.constraints.NotBlank;
 
 public class Place {
     @NotBlank
@@ -23,4 +22,3 @@ public class Place {
         return landmark;
     }
 }
-
